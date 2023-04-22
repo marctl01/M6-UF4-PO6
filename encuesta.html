@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://alertifyjs.com/build/css/alertify.css" rel="stylesheet" />
+    <script src="https://alertifyjs.com/build/alertify.js"></script>
+</head>
+<style>
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap");
+
+body {
+	height: 100vh;
+	margin: 0;
+	display: grid;
+	place-items: center;
+	font-family: "Inter", sans-serif;
+	user-select: none;
+}
+
+fieldset {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	max-width: 340px;
+	border-radius: 20px;
+	width: 100%;
+}
+
+legend {
+	font-size: 22px;
+	font-weight: 600;
+	color: #191919;
+	margin: 0;
+	background: #edf4fe;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	border-radius: 10px 10px 0 0;
+	border: 2px solid #3a88f6;
+	display: flex;
+}
+
+fieldset label {
+	font-weight: 300;
+	font-size: 16px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	flex: 1;
+	box-sizing: border-box;
+	display: flex;
+	padding: 20px 20px 20px 50px;
+	font-weight: 500;
+	color: #191919;
+	-webkit-tap-highlight-color: transparent;
+}
+
+fieldset input[type="radio"] {
+	position: relative;
+	appearance: none;
+	-webkit-appearance: none;
+	transition: linear 0.8s;
+	height: 0;
+	width: 0;
+	-webkit-tap-highlight-color: transparent;
+}
+
+fieldset input[type="radio"]:after {
+	content: "";
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	top: -10.5px;
+	left: -30px;
+	border-radius: 20px;
+	border: 2px solid #3a88f6;
+	transition: linear 0.2s;
+	cursor: pointer;
+}
+
+fieldset input[type="radio"]:checked:after {
+	content: "";
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	background: #3a88f6;
+	transition: linear 0.2s;
+	cursor: pointer;
+}
+
+fieldset input[type="radio"]:checked:before {
+	content: "";
+	position: absolute;
+	height: 8px;
+	width: 8px;
+	border-radius: 4px;
+	background: #fff;
+	left: -24px;
+	top: -4.5px;
+	z-index: 1;
+	cursor: pointer;
+}
+
+.radio-item-container {
+	display: flex;
+	flex-direction: column;
+	border: 2px solid #3a88f6;
+	border-top: 0;
+	background: #fff;
+	border-radius: 0 0 10px 10px;
+	padding: 10px 0;
+}
+
+.radio-item {
+	display: flex;
+	position: relative;
+}
+
+.icon {
+	font-size: 24px;
+	position: absolute;
+	right: 26px;
+	top: 11px;
+	transition: linear 0.3s;
+}
+
+
+.radio-item-container-button {
+	display: flex;
+	flex-direction: column;
+	/* border: 2px solid #3a88f6; */
+    margin: 0 10px 0 10px;
+	background: #fff;
+	border-radius: 0 0 10px 10px;
+	padding: 10px 0;
+}
+
+#submit {
+  font-size: 16px;
+  color: black;
+  padding: 20px;
+  background: #edf4fe;
+  border: solid #3a88f6;
+  border-radius: 15px;
+  font-family: "Inter", sans-serif;
+}
+
+#submit:hover {
+  background: #3a88f6;
+  color: white;
+  border-color: #3a88f6;
+}
+
+#submit:active {
+  background: #20457c;
+  color: white;
+  border-color: #20457c;
+}
+
+
+fieldset input[type="radio"]:checked + span > .icon {
+	transform: scale(1.7);
+}
+
+</style>
+<body>
+    <div id="tencuestas"></div>    
+</body>
+</html>
+
+
+<script>
+
+const url ="controller.php";
+let tabla = document.getElementById('tencuestas');
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const id = urlParams.get('codencuesta');
+
+read(id);
+
+function read(codencuesta){
+    let data = new FormData();
+    data.append('function','read_id');
+    data.append('id',codencuesta);
+
+    fetch(url,{
+        method: 'POST',
+        body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+        data['data'].forEach(encuesta => {
+            let enc= 
+
+            '<fieldset id="encuesta">'+
+                '<legend>'+encuesta['textoencuesta']+'</legend>'+
+                '<div class="radio-item-container">'+
+                    '<div class="radio-item">'+
+                        '<label for="o1">'+
+                            '<input type="radio" id="o1" name="options" value="votosopc1" checked>'+
+                            '<span>'+encuesta['opcion1']+'</span>'+
+                        '</label>'+
+                    '</div>'+
+            
+                    '<div class="radio-item">'+
+                    ' <label for="o2">'+
+                            '<input type="radio" id="o2" name="options" value="votosopc2">'+
+                            '<span>'+encuesta['opcion2']+'</span>'+
+                        '</label>'+
+                    '</div>'+
+            
+                    '<div class="radio-item">'+
+                        '<label for="o3">'+
+                            '<input type="radio" id="o3" name="options" value="votosopc3">'+
+                            '<span>'+encuesta['opcion3']+'</span>'+
+                        '</label>'+
+                    '</div>'+
+
+                    '<div class="radio-item-container-button">'+
+                            '<input type="button" id="submit" onclick="update('+encuesta["codencuesta"]+')" name="options" value="Enviar">'+
+                    '</div>'+
+                '</div>'+
+            '</fieldset>';
+
+                document.getElementById('tencuestas').innerHTML += enc;        
+        });
+    });
+}
+
+function update(d){
+
+alertify.confirm("Update","Seguro que queire actualizar el registo?",
+    function() {
+        var opciones = document.getElementsByName('options');
+
+        for (var i = 0; i < opciones.length; i++) {
+            if (opciones[i].checked) {
+                var op_select = opciones[i].value;
+            }
+        }
+
+        let id = d;
+        let opcion = op_select;
+
+        let data = new FormData();
+        data.append('function','update_vote');
+        data.append('id',id);
+        data.append('opcion',opcion);
+
+        fetch(url,{
+            method: 'POST',
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            alertify.success('Registro actualizado con exito');
+            console.log(data);
+            window.close();
+        });
+    },
+    function() {
+        alertify.error('Registro no actualizado');
+    }
+);
+
+}
+
+</script>

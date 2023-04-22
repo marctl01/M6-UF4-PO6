@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://alertifyjs.com/build/css/alertify.css" rel="stylesheet" />
+    <script src="https://alertifyjs.com/build/alertify.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+</head>
+<style>
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: 'Comfortaa', cursive;
+}
+/************ BEGIN CONTENT CONTAINER  ***************/
+.content-container {
+ margin:0 auto;
+ padding-top:2%;
+ padding-right:35%;
+ padding-bottom:2%;
+ padding-left:5%;
+ max-height:100%;
+}
+
+
+
+
+/************ BEGIN FORM  ***************/
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  margin-top:10px;
+  background-color: #04AA6D;
+  color: white;
+  font-weight:bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #1f1f1f;
+}
+
+.form-container {
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  padding: 20px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+  input[type=submit] {
+    margin-top: 10px;
+  }
+}
+
+
+/************** END FORM ***************/
+
+</style>
+<body>
+    <div id="tencuestas">   
+
+    </div>    
+</body>
+</html>
+
+
+<script>
+
+const url ="controller.php";
+let tabla = document.getElementById('tencuestas');
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const id = urlParams.get('codencuesta');
+
+
+read(id);
+
+
+const myButton = document.getElementById('submit');
+
+myButton.addEventListener('click', function(event) {
+  event.preventDefault();
+  console.log('El botón fue clickeado');
+});
+
+
+
+function read(codencuesta){
+    let data = new FormData();
+    data.append('function','read_id');
+    data.append('id',codencuesta);
+
+    fetch(url,{
+        method: 'POST',
+        body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+        data['data'].forEach(encuesta => {
+            let enc= 
+
+            '<div class="content-container">'+
+                '<h2>Editar datos</h2>'+
+                '<div class="form-container">'+
+                    '<form>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="fname">Texto encuesta</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<textarea id="textoencuesta" name="textoencuesta" value="'+encuesta["textoencuesta"]+'">'+encuesta["textoencuesta"]+'</textarea>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="o1">Opcion 1</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o1" name="o1" value="'+encuesta["opcion1"]+'" placeholder="Opcion 1">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="o2">Opcion 2</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o2" name="o2" value="'+encuesta["opcion2"]+'" placeholder="Opcion 2">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="o3">Opcion 3</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o3" name="o3" value="'+encuesta["opcion3"]+'" placeholder="Opcion 3">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="lname">Voto 1</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o1" name="votosopc1" value="'+encuesta["votosopc1"]+'" placeholder="Voto 1">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="lname">Opcion 2</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o2" name="votosopc2" value="'+encuesta["votosopc2"]+'" placeholder="Voto 2">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="lname">Opcion 3</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="o3" name="votosopc3" value="'+encuesta["votosopc3"]+'" placeholder="Voto 3">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '<input type="submit" value="Submit" id="submit">'+
+                        '</div>'+
+                    '</form>'+
+                '</div>'+
+            '</div>'+
+            
+            
+            '<div class="content-container">'+
+            '<h2>Grafico</h2>'+
+            '<div style="display: flex;">'+
+                '<div>'+
+                    '<h2>Texto</h2>'+
+                    '<div>'+
+                        '<div style="display: flex;">'+
+                            '<label for="o1">Opcion 1 </label>'+
+                            '<div><input type="text" value="'+encuesta["votosopc1"]+'" name="o1" id="o1" disabled></div>'+
+                        '</div>'+
+                        '<div style="display: flex;">'+
+                            '<label for="o2">Opcion 2 </label>'+
+                            '<div><input type="text" value="'+encuesta["votosopc2"]+'" name="o2" id="o2" disabled></div>'+
+                        '</div>'+
+                        '<div style="display: flex;">'+
+                            '<label for="o3">Opcion 3 </label>'+
+                            '<div><input type="text" value="'+encuesta["votosopc3"]+'" name="o3" id="o3" disabled></div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+                '<div>'+
+                    '<h2>Grafico</h2>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+
+           
+
+                document.getElementById('tencuestas').innerHTML += enc;        
+        });
+    });
+}
+
+function update(form){
+
+    alertify.confirm("Update","Seguro que queire actualizar el registo?",
+        function() {
+            
+            form.append('function','update');
+
+            fetch(url,{
+                method: 'POST',
+                body: form
+            })
+            .then(response => response.json())
+            .then(data => {
+                alertify.success('Registro actualizado con exito');
+                console.log(data);
+                window.close();
+            });
+        },
+        function() {
+            alertify.error('Registro no actualizado');
+        }
+    );
+
+}
+
+</script>
