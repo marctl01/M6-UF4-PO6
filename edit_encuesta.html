@@ -123,16 +123,6 @@ const id = urlParams.get('codencuesta');
 
 read(id);
 
-
-const myButton = document.getElementById('submit');
-
-myButton.addEventListener('click', function(event) {
-  event.preventDefault();
-  console.log('El botón fue clickeado');
-});
-
-
-
 function read(codencuesta){
     let data = new FormData();
     data.append('function','read_id');
@@ -144,13 +134,22 @@ function read(codencuesta){
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         data['data'].forEach(encuesta => {
             let enc= 
 
             '<div class="content-container">'+
                 '<h2>Editar datos</h2>'+
                 '<div class="form-container">'+
-                    '<form>'+
+                    '<form id="fupdate">'+
+                        '<div class="row">'+
+                        '<div class="col-25">'+
+                            '<label for="id">Id</label>'+
+                        '</div>'+
+                        '<div class="col-75">'+
+                            '<input type="text" id="id" name="id" value="'+encuesta["codencuesta"]+'" disabled>'+
+                        '</div>'+
+                        '</div>'+
                         '<div class="row">'+
                         '<div class="col-25">'+
                             '<label for="fname">Texto encuesta</label>'+
@@ -188,27 +187,27 @@ function read(codencuesta){
                             '<label for="lname">Voto 1</label>'+
                         '</div>'+
                         '<div class="col-75">'+
-                            '<input type="text" id="o1" name="votosopc1" value="'+encuesta["votosopc1"]+'" placeholder="Voto 1">'+
+                            '<input type="text" id="v1" name="votosopc1" value="'+encuesta["votosopc1"]+'" placeholder="Voto 1">'+
                         '</div>'+
                         '</div>'+
                         '<div class="row">'+
                         '<div class="col-25">'+
-                            '<label for="lname">Opcion 2</label>'+
+                            '<label for="lname">Voto 2</label>'+
                         '</div>'+
                         '<div class="col-75">'+
-                            '<input type="text" id="o2" name="votosopc2" value="'+encuesta["votosopc2"]+'" placeholder="Voto 2">'+
+                            '<input type="text" id="v2" name="votosopc2" value="'+encuesta["votosopc2"]+'" placeholder="Voto 2">'+
                         '</div>'+
                         '</div>'+
                         '<div class="row">'+
                         '<div class="col-25">'+
-                            '<label for="lname">Opcion 3</label>'+
+                            '<label for="lname">Voto 3</label>'+
                         '</div>'+
                         '<div class="col-75">'+
-                            '<input type="text" id="o3" name="votosopc3" value="'+encuesta["votosopc3"]+'" placeholder="Voto 3">'+
+                            '<input type="text" id="v3" name="votosopc3" value="'+encuesta["votosopc3"]+'" placeholder="Voto 3">'+
                         '</div>'+
                         '</div>'+
                         '<div class="row">'+
-                        '<input type="submit" value="Submit" id="submit">'+
+                        '<input type="submit" value="Submit" id="submit" name="submit" onclick="update(event)">'+
                         '</div>'+
                     '</form>'+
                 '</div>'+
@@ -218,25 +217,30 @@ function read(codencuesta){
             '<div class="content-container">'+
             '<h2>Grafico</h2>'+
             '<div style="display: flex;">'+
-                '<div>'+
+                '<div style="padding: 10px;">'+
                     '<h2>Texto</h2>'+
                     '<div>'+
                         '<div style="display: flex;">'+
                             '<label for="o1">Opcion 1 </label>'+
-                            '<div><input type="text" value="'+encuesta["votosopc1"]+'" name="o1" id="o1" disabled></div>'+
+                            '<div><input type="text" value="'+encuesta["votosopc1"]+'" name="op1" id="op1" disabled></div>'+
                         '</div>'+
                         '<div style="display: flex;">'+
                             '<label for="o2">Opcion 2 </label>'+
-                            '<div><input type="text" value="'+encuesta["votosopc2"]+'" name="o2" id="o2" disabled></div>'+
+                            '<div><input type="text" value="'+encuesta["votosopc2"]+'" name="op2" id="op2" disabled></div>'+
                         '</div>'+
                         '<div style="display: flex;">'+
                             '<label for="o3">Opcion 3 </label>'+
-                            '<div><input type="text" value="'+encuesta["votosopc3"]+'" name="o3" id="o3" disabled></div>'+
+                            '<div><input type="text" value="'+encuesta["votosopc3"]+'" name="op3" id="op3" disabled></div>'+
                         '</div>'+
                     '</div>'+
                 '</div>'+
-                '<div>'+
+                '<div style="padding: 10px;">'+
                     '<h2>Grafico</h2>'+
+                    '<div style="display: grid; border: 1px solid black;">'+
+                        '<img src="barra-roja.png" alt="Votos opcion 1" style="width: '+encuesta["votosopc1g"] +'px; height: 40px;">'+
+                        '<img src="barra-roja.png" alt="Votos opcion 2" style="width: '+encuesta["votosopc2g"] +'px; height: 40px;">'+
+                        '<img src="barra-roja.png" alt="Votos opcion 3" style="width: '+encuesta["votosopc3g"] +'px; height: 40px;">'+
+                    '<div>'+
                 '</div>'+
             '</div>'+
         '</div>';
@@ -248,12 +252,25 @@ function read(codencuesta){
     });
 }
 
-function update(form){
+function update(event){
+    event.preventDefault();
 
     alertify.confirm("Update","Seguro que queire actualizar el registo?",
         function() {
+
+            fdata = document.getElementById("fupdate");
+            idenq = document.getElementById("id");
+
+            console.log(fdata);
+            form = new FormData(fdata);
             
             form.append('function','update');
+            form.append('id',idenq.value);
+
+            form.forEach(function(valor, clave) {
+            // Realiza las operaciones que necesites con la clave y el valor del formData
+                console.log("Clave: " + clave + ", Valor: " + valor);
+            });
 
             fetch(url,{
                 method: 'POST',
@@ -262,8 +279,7 @@ function update(form){
             .then(response => response.json())
             .then(data => {
                 alertify.success('Registro actualizado con exito');
-                console.log(data);
-                window.close();
+                location.reload();
             });
         },
         function() {
@@ -272,5 +288,6 @@ function update(form){
     );
 
 }
+
 
 </script>

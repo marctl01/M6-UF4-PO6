@@ -3,7 +3,7 @@
 $dbhost = "127.0.0.1";
 $dbname = "encuestasdb";
 $dbuser = "root";
-$dbpass = "root";
+$dbpass = "";
 
 try{
     $dsn = "mysql:host=".$dbhost.";dbname=".$dbname.";charset=utf8mb4";
